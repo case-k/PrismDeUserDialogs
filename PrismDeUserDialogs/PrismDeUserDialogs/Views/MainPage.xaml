@@ -4,8 +4,21 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="PrismDeUserDialogs.Views.MainPage"
-             Title="MainPage">
+             Title="UserDialogs">
+  
   <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-    <Label Text="{Binding Title}" />
+    <Label Text="{Binding ResultText}" FontAttributes="Bold"/>
+    
+    <Button Text="ActionSheet" Command="{Binding ActionSheetCommand}"/>
+    <Button Text="Alert" Command="{Binding AlertCommand}"/>
+    <Button Text="Confirm" Command="{Binding ConfirmCommand}"/>
+    <Button Text="DatePrompt" Command="{Binding DatePromptCommand}"/>
+    <Button Text="Loading" Command="{Binding LoadingCommand}"/>
+    <Button Text="Login" Command="{Binding LoginCommand}"/>
+    <Button Text="Progress" Command="{Binding ProgressCommand}"/>
+    <Button Text=""/>
+    <Button Text=""/>
+    <Button Text=""/>
   </StackLayout>
+  
 </ContentPage>

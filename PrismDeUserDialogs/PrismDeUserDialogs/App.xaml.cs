@@ -1,4 +1,6 @@
-﻿using Prism.Unity;
+﻿using Microsoft.Practices.Unity;
+using Acr.UserDialogs;
+using Prism.Unity;
 using PrismDeUserDialogs.Views;
 
 namespace PrismDeUserDialogs
@@ -11,11 +13,12 @@ namespace PrismDeUserDialogs
         {
             InitializeComponent();
 
-            NavigationService.NavigateAsync("MainPage?title=Hello%20from%20Xamarin.Forms");
+            NavigationService.NavigateAsync("MainPage");
         }
 
         protected override void RegisterTypes()
         {
+            Container.RegisterInstance<IUserDialogs>(UserDialogs.Instance);
             Container.RegisterTypeForNavigation<MainPage>();
         }
     }
