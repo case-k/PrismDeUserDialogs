@@ -12,6 +12,7 @@ namespace PrismDeUserDialogs.ViewModels
 {
     public class MainPageViewModel : BindableBase
     {
+        private INavigationService _navigationService;
         private IUserDialogs _dialogs;
 
         public ICommand ActionSheetCommand { get; }
@@ -21,6 +22,7 @@ namespace PrismDeUserDialogs.ViewModels
         public ICommand LoadingCommand { get; }
         public ICommand LoginCommand { get; }
         public ICommand ProgressCommand { get; }
+        public ICommand NaviLoadingCommand { get; }
 
         private string _resultText;
         public string ResultText
@@ -31,8 +33,9 @@ namespace PrismDeUserDialogs.ViewModels
 
 
 
-        public MainPageViewModel(IUserDialogs UserDialogs)
+        public MainPageViewModel(INavigationService navigationService, IUserDialogs UserDialogs)
         {
+            _navigationService = navigationService;
             _dialogs = UserDialogs;
 
             ActionSheetCommand = new DelegateCommand(ActionSheet);
@@ -42,6 +45,7 @@ namespace PrismDeUserDialogs.ViewModels
             LoadingCommand = new DelegateCommand(Loading);
             LoginCommand = new DelegateCommand(Login);
             ProgressCommand = new DelegateCommand(Progress);
+            NaviLoadingCommand = new DelegateCommand(NaviLoading);
 
             ResultText = "";
         }
@@ -118,9 +122,28 @@ namespace PrismDeUserDialogs.ViewModels
 
         async private void Loading()
         {
+            long ret = 0;
+
             using (_dialogs.Loading("読込中..."))
-                await Task.Delay(3000);
+            {
+                // 実際重たい処理をさせてみる
+
+                //for (long i = 0; i < 1000000000; i++)
+                //    ret += i;
+                // ↑これだと処理が終わった後にダイアログが表示される
+
+                ret = await LoadingProc();
+                // こうやればダイアログが先に表示される
+            }
         }
+
+        Task<long> LoadingProc() => Task.Run<long>(() =>
+        {
+            long ret = 0;
+            for (long i = 0; i < 1000000000; i++)
+                ret += i;
+            return ret;
+        });
 
 
         private void Login()
@@ -145,6 +168,27 @@ namespace PrismDeUserDialogs.ViewModels
                     dlg.PercentComplete += 5;
                 }
             }
+        }
+
+
+        async private void NaviLoading()
+        {
+            using (_dialogs.Loading("読込中..."))
+            {
+                // 表示が重いページに遷移
+                //await _navigationService.NavigateAsync("SecondPage");
+                // ↑NavigateAsyncって名前だから非同期っぽいけど、ページ遷移終わるまでダイアログが表示されない
+
+                //await Task.Run(async () => await _navigationService.NavigateAsync("SecondPage"));
+                // ↑これで先にダイアログ表示されるけど、ワーカースレッドからUIにアクセスするなって怒られる
+
+
+                await Task.Delay(500);
+                await _navigationService.NavigateAsync("SecondPage");
+                // 遷移前にちょっと待つとダイアログが先に表示されるけど、どーなのこれ
+            }
+
+            // 遷移処理と遷移先の表示処理は分けて考えるべきなのかも
         }
     }
 }

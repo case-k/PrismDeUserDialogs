@@ -2,6 +2,7 @@
 using Acr.UserDialogs;
 using Prism.Unity;
 using PrismDeUserDialogs.Views;
+using Xamarin.Forms;
 
 namespace PrismDeUserDialogs
 {
@@ -13,13 +14,16 @@ namespace PrismDeUserDialogs
         {
             InitializeComponent();
 
-            NavigationService.NavigateAsync("MainPage");
+            NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
 
         protected override void RegisterTypes()
         {
             Container.RegisterInstance<IUserDialogs>(UserDialogs.Instance);
+
+            Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
+            Container.RegisterTypeForNavigation<SecondPage>();
         }
     }
 }

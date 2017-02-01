@@ -16,7 +16,7 @@
     <Button Text="Loading" Command="{Binding LoadingCommand}"/>
     <Button Text="Login" Command="{Binding LoginCommand}"/>
     <Button Text="Progress" Command="{Binding ProgressCommand}"/>
-    <Button Text=""/>
+    <Button Text="Navi with Loading" Command="{Binding NaviLoadingCommand}"/>
     <Button Text=""/>
     <Button Text=""/>
   </StackLayout>
