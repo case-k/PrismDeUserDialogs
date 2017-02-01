@@ -173,19 +173,25 @@ namespace PrismDeUserDialogs.ViewModels
 
         async private void NaviLoading()
         {
-            using (_dialogs.Loading("読込中..."))
+            using (var dlg = _dialogs.Loading("読込中...", show: false))
             {
                 // 表示が重いページに遷移
                 //await _navigationService.NavigateAsync("SecondPage");
                 // ↑NavigateAsyncって名前だから非同期っぽいけど、ページ遷移終わるまでダイアログが表示されない
 
+
                 //await Task.Run(async () => await _navigationService.NavigateAsync("SecondPage"));
                 // ↑これで先にダイアログ表示されるけど、ワーカースレッドからUIにアクセスするなって怒られる
 
 
-                await Task.Delay(500);
+                //await Task.Delay(500);
+                //await _navigationService.NavigateAsync("SecondPage");
+                // ↑遷移前にちょっと待つとダイアログが先に表示されるけど、どーなのこれ
+
+
+                await Task.Run(() => dlg.Show());
                 await _navigationService.NavigateAsync("SecondPage");
-                // 遷移前にちょっと待つとダイアログが先に表示されるけど、どーなのこれ
+                // ↑これならまぁ許せるかな？
             }
 
             // 遷移処理と遷移先の表示処理は分けて考えるべきなのかも
